@@ -43,23 +43,22 @@ Sum them
 const fs = require('fs').promises;
 const tools = require('../test_tools');
 
-MAX_CUBES = { red: 12, green: 13, blue: 14}
+MAX_CUBES = { red: 12, green: 13, blue: 14 }
 
 const cubes = async (filename) => {
-    const data = await fs.readFile(filename, 'utf8');
+    const data = await fs.readFile(__dirname + '/' + filename, 'UTF-8');
     const lines = data.split('\n');
 
     const findMax = (data, searchTerm) => {
-        searchStr = '\\d+\\s' + searchTerm;
+        const searchStr = '\\d+\\s' + searchTerm;
         let candidates = data.match(new RegExp(searchStr, "g"));
         candidates = candidates.map((str) => { return Number(str.match(/\d+/)[0]) } )
-        // console.log(candidates)
         return Math.max(...candidates);
     }
 
     const myData = lines.map((line) => {
         let [game, data] = line.split(/:/);
-        game = game.match(/\d/)[0];
+        game = Number(game.match(/\d+/)[0]);
 
         const red = findMax(data, 'red');
         const green = findMax(data, 'green');
@@ -68,23 +67,18 @@ const cubes = async (filename) => {
         return { game: game, red: red, green: green, blue: blue }
     })
 
-    // console.log(myData);
-
     const possibleGames = [];
     for (let i in myData) {
         let gameItem = myData[i];
-        // console.log(gameItem);
-        // console.log(gameItem.red);
-        // console.log(MAX_CUBES.red)
         if (gameItem.red <= MAX_CUBES.red &&
-        gameItem.green <= MAX_CUBES.green && 
-        gameItem.blue <= MAX_CUBES.blue) {
-            possibleGames.push(Number(gameItem.game));
+            gameItem.green <= MAX_CUBES.green && 
+            gameItem.blue <= MAX_CUBES.blue) {
+            possibleGames.push(gameItem.game);
         }
     }
-    // console.log(myData);
-    // console.log(possibleGames)
-    return possibleGames.reduce((accum, item) => accum + item);
+
+    return possibleGames.reduce((accum, item) => accum + item, 0);
 }
 
 tools.test(cubes, 'testfile1.txt', 8);
+tools.test(cubes, 'input.txt', 2563); // 262 is too low
