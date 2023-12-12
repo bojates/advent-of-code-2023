@@ -48,36 +48,34 @@ MAX_CUBES = { red: 12, green: 13, blue: 14 }
 const cubes = async (filename) => {
     const data = await fs.readFile(__dirname + '/' + filename, 'UTF-8');
     const lines = data.split('\n');
-
-    const findMax = (data, searchTerm) => {
+    
+    const gameData = lines.map((line) => {
+        let [game, data] = line.split(/:/);
+        game = Number(game.match(/\d+/)[0]);
+        
+        const red = findMax(data, 'red');
+        const green = findMax(data, 'green');
+        const blue  = findMax(data, 'blue');
+        
+        return { game: game, red: red, green: green, blue: blue }
+    })
+    
+    const filteredData = gameData.filter((item) => {
+        if (item.red <= MAX_CUBES.red &&
+            item.green <= MAX_CUBES.green && 
+            item.blue <= MAX_CUBES.blue) {
+                return true;
+            }
+        }).map((item) => item.game )
+        
+    return filteredData.reduce((accum, item) => accum + item, 0);
+        
+    function findMax(data, searchTerm) {
         const searchStr = '\\d+\\s' + searchTerm;
         let candidates = data.match(new RegExp(searchStr, "g"));
         candidates = candidates.map((str) => { return Number(str.match(/\d+/)[0]) } )
         return Math.max(...candidates);
     }
-
-    const myData = lines.map((line) => {
-        let [game, data] = line.split(/:/);
-        game = Number(game.match(/\d+/)[0]);
-
-        const red = findMax(data, 'red');
-        const green = findMax(data, 'green');
-        const blue  = findMax(data, 'blue');
-
-        return { game: game, red: red, green: green, blue: blue }
-    })
-
-    const possibleGames = [];
-    for (let i in myData) {
-        let gameItem = myData[i];
-        if (gameItem.red <= MAX_CUBES.red &&
-            gameItem.green <= MAX_CUBES.green && 
-            gameItem.blue <= MAX_CUBES.blue) {
-            possibleGames.push(gameItem.game);
-        }
-    }
-
-    return possibleGames.reduce((accum, item) => accum + item, 0);
 }
 
 tools.test(cubes, 'testfile1.txt', 8);
