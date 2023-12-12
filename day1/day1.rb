@@ -45,7 +45,7 @@ NUMBERS = { "one" => "1",
             "nine" => "9" }
 
 def extract_codes(filename)
-  lines = File.read(filename).split
+  lines = File.read(File.dirname(__FILE__) + '/' + filename).split
   restring = '(?=(\d|' + NUMBERS.keys.join('|') + '))' 
   re = Regexp.new(restring)
 
