@@ -1,4 +1,5 @@
 const fs = require('fs').promises;
+const tools = require('../test_tools');
 
 const myFunc = async (filename) => {
     const data = await fs.readFile(filename, 'utf8');
@@ -25,17 +26,17 @@ const myFunc = async (filename) => {
     return res.reduce((accumulator, element) => accumulator + element, 0)
 }
 
-const test = (filename, expectedAnswer) => {
-    myFunc(filename).then(answer => {
-        if (answer === expectedAnswer) {
-            console.log("Success: " + expectedAnswer);
-        } else {
-            console.log("=== nope! Got: " + answer + ' but expected: ' + expectedAnswer);
-        }
-    }).catch(err => {
-        console.error(err);
-    });
-}
+// const test = (filename, expectedAnswer) => {
+//     myFunc(filename).then(answer => {
+//         if (answer === expectedAnswer) {
+//             console.log("Success: " + expectedAnswer);
+//         } else {
+//             console.log("=== nope! Got: " + answer + ' but expected: ' + expectedAnswer);
+//         }
+//     }).catch(err => {
+//         console.error(err);
+//     });
+// }
 
 // https://stackoverflow.com/questions/20833295/how-can-i-match-overlapping-strings-with-regex
 // Loop our Object and if we find values, add them to a holding array
@@ -54,6 +55,6 @@ function matchOverlap(input, re) {
     return retArr;
 }
 
-test('testfile.txt', 142);
-test('testfile2.txt', 281);
-test('input.txt', 53592); // 55621 for the uncalibrated. 53587 was wrong. Too low. 
+tools.test(myFunc, 'testfile.txt', 142);
+tools.test(myFunc, 'testfile2.txt', 281);
+tools.test(myFunc, 'input.txt', 53592); // 55621 for the uncalibrated. 53587 was wrong. Too low. 
