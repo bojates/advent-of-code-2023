@@ -26,18 +26,6 @@ const myFunc = async (filename) => {
     return res.reduce((accumulator, element) => accumulator + element, 0)
 }
 
-// const test = (filename, expectedAnswer) => {
-//     myFunc(filename).then(answer => {
-//         if (answer === expectedAnswer) {
-//             console.log("Success: " + expectedAnswer);
-//         } else {
-//             console.log("=== nope! Got: " + answer + ' but expected: ' + expectedAnswer);
-//         }
-//     }).catch(err => {
-//         console.error(err);
-//     });
-// }
-
 // https://stackoverflow.com/questions/20833295/how-can-i-match-overlapping-strings-with-regex
 // Loop our Object and if we find values, add them to a holding array
 function matchOverlap(input, re) {
