@@ -34,6 +34,8 @@ Loop each map?
 Sum array
 =end
 
+require_relative '../test_tool'
+
 NUMBERS = { "one" => "1", 
             "two" => "2", 
             "three" => "3", 
@@ -45,7 +47,7 @@ NUMBERS = { "one" => "1",
             "nine" => "9" }
 
 def extract_codes(filename)
-  lines = File.read(File.dirname(__FILE__) + '/' + filename).split
+  lines = File.read(File.join(File.dirname(__FILE__), filename)).split
   restring = '(?=(\d|' + NUMBERS.keys.join('|') + '))' 
   re = Regexp.new(restring)
 
@@ -56,15 +58,6 @@ def extract_codes(filename)
   end.sum
 end
 
-def test(filename, expected)
-  answer = extract_codes(filename)
-  if expected == answer
-    puts 'OK'
-  else 
-    puts "ERROR expected: #{expected} and got: #{answer}"
-  end
-end
-
-test('testfile.txt', 142)
-test('testfile2.txt', 281)
-test('input.txt', 53592)
+test(extract_codes('testfile.txt'), 142)
+test(extract_codes('testfile2.txt'), 281)
+test(extract_codes('input.txt'), 53592)
