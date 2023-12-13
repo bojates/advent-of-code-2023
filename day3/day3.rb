@@ -70,35 +70,38 @@ Sum the array
 require_relative '../test_tool'
 
 def sum_parts(filename)
-  lines = File.readlines(File.join(File.dirname(__FILE__), filename), chomp: true)
-  
+  lines = get_lines(filename)
+
   parts = []
   lines.each_with_index do |line, line_idx|
     # next if line_idx > 1
-    digit_str = []
+    digit_str = ''
     keep_me = false
 
     line.chars.each_with_index do |char, idx|
       if /\d/=~char
-        digit_str << char
+        digit_str += char
         if !keep_me && check_for_symbol(lines, line_idx, idx)
           keep_me = true
         end
       else 
         if keep_me
-          parts << digit_str.join.to_i
+          parts << digit_str
         end
-        digit_str = []
+        digit_str = ''
         keep_me = false
       end
 
       if (idx == line.length - 1) && keep_me
-        parts << digit_str.join.to_i
+        parts << digit_str
       end
     end
   end
-  # p parts
-  parts.sum
+  parts.map(&:to_i).sum
+end
+
+def get_lines(filename)
+  File.readlines(File.join(File.dirname(__FILE__), filename), chomp: true)
 end
 
 def check_for_symbol(lines, line_idx, char_idx)
